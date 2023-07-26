@@ -13,5 +13,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven
+      - name: Package with Maven
         run: mvn --batch-mode --update-snapshots package
+      - name: Run with Contrast
+        run: java -javaagent:contrast.jar -Dcontrast.agent.java.standalone_app_name=PetClinic-es -Dcontrast.override.appname=PetClinic-es -Dcontrast.server=PetClinic-es-GitHubAction -jar target/*.jar
