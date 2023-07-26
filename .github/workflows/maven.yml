@@ -50,13 +50,13 @@ jobs:
         # Contrast Organization ID
         orgId: $CONTRAST__API__ORGANIZATION_ID
         # URL of your Contrast Teamserver Instance (should begin with https:// or http://)
-        apiUrl: "CONTRAST__API__URL"
+        apiUrl: https://eval.contrastsecurity.com/
         # Contrast User/Service Account service key. Required if authorization not passed.
         serviceKey: $CONTRAST__API__SERVICE_KEY
         # Contrast User/Service Account Authorization Header. Required if username and service key not passed.
         authHeader: # optional
         # Contrast User/Service Account username. Required if authorization not passed.
-        userName: "https://eval.contrastsecurity.com/"
+        userName: $CONTRAST__API__USER_NAME
         # ID of the application to verify against. Required if app_name not passed.
         appId: 8ab9aa54-5986-40c9-835a-8b0b22541135
         # Name of the application to verify against. Required if app_id not passed.
