@@ -22,3 +22,5 @@ jobs:
           api_url: ${{ secrets.CONTRAST__API__URL }}
           api_username: ${{ secrets.CONTRAST__API__USER_NAME }}
         run: java -javaagent:contrast.jar -Dcontrast.api.url="$api_url" -Dcontrast.api.api_key="$api_key" -Dcontrast.api.service_key="$api_service_key" -Dcontrast.api.user_name="$api_username" -Dcontrast.agent.java.standalone_app_name=PetClinic-es -Dcontrast.override.appname=PetClinic-es -Dcontrast.server=PetClinic-es-GitHubAction  -jar target/*.jar
+      -name: Send command to get/owners
+        run: curl localhost:8080/owners?lastName=mike
