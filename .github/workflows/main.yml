@@ -7,6 +7,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      env: # Or as an environment variable
+        api_key: ${{ secrets.CONTRAST__API__API_KEY }}
+        api_service_key: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
+        api_url: ${{ secrets.CONTRAST__API__URL }}
+        api_username: ${{ secrets.CONTRAST__API__USER_NAME }}
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -16,4 +21,4 @@ jobs:
       - name: Package with Maven
         run: mvn --batch-mode --update-snapshots package
       - name: Run with Contrast
-        run: java -javaagent:contrast.jar -Dcontrast.agent.java.standalone_app_name=PetClinic-es -Dcontrast.override.appname=PetClinic-es -Dcontrast.server=PetClinic-es-GitHubAction -jar target/*.jar
+        run: java -javaagent:contrast.jar -Dcontrast.agent.java.standalone_app_name=PetClinic-es -Dcontrast.override.appname=PetClinic-es -Dcontrast.server=PetClinic-es-GitHubAction  -jar target/*.jar
