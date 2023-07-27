@@ -34,7 +34,7 @@ jobs:
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-    - name: Contrast Verify
+    - name: Contrast Verify #checks againsta policy in the 
       #env: 
       #      CONTRAST__API__API_KEY: ${{ secrets.CONTRAST__API__API_KEY }}
       #      CONTRAST__API__SERVICE_KEY: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
