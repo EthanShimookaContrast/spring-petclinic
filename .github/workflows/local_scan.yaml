@@ -26,38 +26,46 @@ jobs:
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-    - name: Contrast Verify #checks againsta policy in the platform
-      #env: 
-      #      CONTRAST__API__API_KEY: ${{ secrets.CONTRAST__API__API_KEY }}
-      #      CONTRAST__API__SERVICE_KEY: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
-      #      CONTRAST__API__URL: ${{ secrets.CONTRAST__API__URL }}
-      #      CONTRAST__API__USER_NAME: ${{ secrets.CONTRAST__API__USER_NAME }}
-      #      CONTRAST__API__ORGANIZATION_ID: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
-  # You may pin to the exact commit or the version.
-  # uses: Contrast-Security-OSS/integration-verify-github-action@c51d604e5595032e1493ec280c55128b64739454
-      uses: Contrast-Security-OSS/integration-verify-github-action@v0.6.2
+    - name: Contrast Local Scan
+      # You may pin to the exact commit or the version.
+      # uses: Contrast-Security-OSS/contrast-local-scan-action@d0f76824acab3dac8539c5730d9e1ec3cf77293a
+      uses: Contrast-Security-OSS/contrast-local-scan-action@v1.0.1
       with:
-        # Contrast User/Service Account API Key
-        apiKey: ${{ secrets.CONTRAST__API__API_KEY }}
-        # Contrast Organization ID
-        orgId: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
-        # URL of your Contrast Teamserver Instance (should begin with https:// or http://)
+        # Url of your contrast instance, defaults to https://app.contrastsecurity.com/
         apiUrl: https://eval.contrastsecurity.com/
-        # Contrast User/Service Account service key. Required if authorization not passed.
-        serviceKey: # ${{ secrets.CONTRAST__API__SERVICE_KEY }}
-        # Contrast User/Service Account Authorization Header. Required if username and service key not passed.
-        authHeader: ${{ secrets.CONTRAST__AUTH_HEADER }}
-        # Contrast User/Service Account username. Required if authorization not passed.
-        userName: # ${{ secrets.CONTRAST__API__USER_NAME }}
-        # ID of the application to verify against. Required if app_name not passed.
-        appId: 8ab9aa54-5986-40c9-835a-8b0b22541135
-        # Name of the application to verify against. Required if app_id not passed.
-        appName: # optional
-        # Build number / application version to check vulnerabilities against.
-        buildNumber: # optional
-        # Number of vulnerabilities that are needed to fail the build (not used if there is a defined job outcome policy)
-        failThreshold: 0
-        # Filter vulnerabilities first found after this timestamp (formatted in milliseconds since the epoch)
-        jobStartTime: # optional, default is 0
-        # Comma separated list of vulnerability severities to consider (not used if there is a defined job outcome policy)
-        severities: CRITICAL
+        # User name for authentication
+        apiUserName: ${{ secrets.CONTRAST__API__USER_NAME }}
+        # API Key from user settings
+        apiKey: ${{ secrets.CONTRAST__API__API_KEY }}
+        # Service Key from user settings
+        apiServiceKey: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
+        # Organization ID from user settings
+        apiOrgId: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
+        # If set, checks will be added to the current commit based on any vulnerabilities found. Requires the 'checks: write' permission.
+    
+        checks: true
+        # Set this to true to include code quality rules when executing source code scanner.
+        codeQuality: false
+        # Set this to true or false explicitly override the default branching behviour in scan whereby scan results not on the default github branch are not saved against the main project.
+    
+        #defaultBranch: # optional
+        # Label to associate with the current scan. Defaults to the current ref e.g. refs/heads/main
+        #label: # optional
+        # Memory setting passed to the underlying scan engine. Defaulted to 8g
+        #memory: # optional
+        # Path to scan with local scanner. Defaults to the current repository path.
+        #path: # optional
+        # Project to associate scan with. Defaults to current github repository name e.g. Example-ORG/example-repo
+        #projectName: # optional
+        # Resource group to assign newly created projects to.
+        #resourceGroup: # optional
+        # Used in conjuction with severity or checks, set this valid to fail the build based on agreggated project vulnerabilities or scan level. Valid values are "project" or "scan". Defaults to "project".
+    
+        #strategy: # optional, default is project
+        # Set this to cause the build to fail if vulnerabilities are found exceeding this severity or higher. Valid values are CRITICAL, HIGH, MEDIUM, LOW, NOTE.
+        #severity: # optional
+        # Execution timeout (in seconds) setting passed to the underlying scan engine. Defaulted to 60 minutes.
+        #timeout: # optional
+        # GitHub token for GitHub API requests. Defaults to GITHUB_TOKEN.
+        #token: # default is ${{ github.token }}
+              
