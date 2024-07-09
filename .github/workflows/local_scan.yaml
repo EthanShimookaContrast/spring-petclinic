@@ -1,0 +1,63 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    - name: Update dependency graph
+      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+
+    - name: Contrast Verify #checks againsta policy in the platform
+      #env: 
+      #      CONTRAST__API__API_KEY: ${{ secrets.CONTRAST__API__API_KEY }}
+      #      CONTRAST__API__SERVICE_KEY: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
+      #      CONTRAST__API__URL: ${{ secrets.CONTRAST__API__URL }}
+      #      CONTRAST__API__USER_NAME: ${{ secrets.CONTRAST__API__USER_NAME }}
+      #      CONTRAST__API__ORGANIZATION_ID: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
+  # You may pin to the exact commit or the version.
+  # uses: Contrast-Security-OSS/integration-verify-github-action@c51d604e5595032e1493ec280c55128b64739454
+      uses: Contrast-Security-OSS/integration-verify-github-action@v0.6.2
+      with:
+        # Contrast User/Service Account API Key
+        apiKey: ${{ secrets.CONTRAST__API__API_KEY }}
+        # Contrast Organization ID
+        orgId: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
+        # URL of your Contrast Teamserver Instance (should begin with https:// or http://)
+        apiUrl: https://eval.contrastsecurity.com/
+        # Contrast User/Service Account service key. Required if authorization not passed.
+        serviceKey: # ${{ secrets.CONTRAST__API__SERVICE_KEY }}
+        # Contrast User/Service Account Authorization Header. Required if username and service key not passed.
+        authHeader: ${{ secrets.CONTRAST__AUTH_HEADER }}
+        # Contrast User/Service Account username. Required if authorization not passed.
+        userName: # ${{ secrets.CONTRAST__API__USER_NAME }}
+        # ID of the application to verify against. Required if app_name not passed.
+        appId: 8ab9aa54-5986-40c9-835a-8b0b22541135
+        # Name of the application to verify against. Required if app_id not passed.
+        appName: # optional
+        # Build number / application version to check vulnerabilities against.
+        buildNumber: # optional
+        # Number of vulnerabilities that are needed to fail the build (not used if there is a defined job outcome policy)
+        failThreshold: 0
+        # Filter vulnerabilities first found after this timestamp (formatted in milliseconds since the epoch)
+        jobStartTime: # optional, default is 0
+        # Comma separated list of vulnerability severities to consider (not used if there is a defined job outcome policy)
+        severities: CRITICAL
