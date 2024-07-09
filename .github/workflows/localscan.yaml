@@ -1,0 +1,71 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    - name: Update dependency graph
+      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+
+    - name: Contrast Local Scan
+      # You may pin to the exact commit or the version.
+      # uses: Contrast-Security-OSS/contrast-local-scan-action@d0f76824acab3dac8539c5730d9e1ec3cf77293a
+      uses: Contrast-Security-OSS/contrast-local-scan-action@v1.0.1
+      with:
+        # Url of your contrast instance, defaults to https://app.contrastsecurity.com/
+        apiUrl: https://eval.contrastsecurity.com/
+        # User name for authentication
+        apiUserName: ${{ secrets.CONTRAST__API__USER_NAME }}
+        # API Key from user settings
+        apiKey: ${{ secrets.CONTRAST__API__API_KEY }}
+        # Service Key from user settings
+        apiServiceKey: ${{ secrets.CONTRAST__API__SERVICE_KEY }}
+        # Organization ID from user settings
+        apiOrgId: ${{ secrets.CONTRAST__API__ORGANIZATION_ID }}
+        # If set, checks will be added to the current commit based on any vulnerabilities found. Requires the 'checks: write' permission.
+    
+        checks: true
+        # Set this to true to include code quality rules when executing source code scanner.
+        codeQuality: false
+        # Set this to true or false explicitly override the default branching behviour in scan whereby scan results not on the default github branch are not saved against the main project.
+    
+        #defaultBranch: # optional
+        # Label to associate with the current scan. Defaults to the current ref e.g. refs/heads/main
+        #label: # optional
+        # Memory setting passed to the underlying scan engine. Defaulted to 8g
+        #memory: # optional
+        # Path to scan with local scanner. Defaults to the current repository path.
+        #path: # optional
+        # Project to associate scan with. Defaults to current github repository name e.g. Example-ORG/example-repo
+        #projectName: # optional
+        # Resource group to assign newly created projects to.
+        #resourceGroup: # optional
+        # Used in conjuction with severity or checks, set this valid to fail the build based on agreggated project vulnerabilities or scan level. Valid values are "project" or "scan". Defaults to "project".
+    
+        #strategy: # optional, default is project
+        # Set this to cause the build to fail if vulnerabilities are found exceeding this severity or higher. Valid values are CRITICAL, HIGH, MEDIUM, LOW, NOTE.
+        #severity: # optional
+        # Execution timeout (in seconds) setting passed to the underlying scan engine. Defaulted to 60 minutes.
+        #timeout: # optional
+        # GitHub token for GitHub API requests. Defaults to GITHUB_TOKEN.
+        #token: # default is ${{ github.token }}
+              
