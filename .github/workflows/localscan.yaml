@@ -12,8 +12,18 @@ permissions:
 
 jobs:
   scan:
-   runs-on: ubuntu-latest
-   steps:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
     - name: Contrast Local Scan
       # You may pin to the exact commit or the version.
       # uses: Contrast-Security-OSS/contrast-local-scan-action@d0f76824acab3dac8539c5730d9e1ec3cf77293a
